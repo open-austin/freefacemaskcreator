@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noindex, nofollow">
+        <link rel="icon" type="image/png" href="{{ '/assets/favicon.png' | relative_url }}">
+        <title>{{ page.title }}</title>
+        <link href="{{ '/css/thirdparty/bootstrap-4.4.1.min.css' | relative_url }}" rel="stylesheet">
+        <style>
+            /* SVG icons (based on https://github.com/diafygi/svg-font-to-svg-sprite-converter)
+               Example (put "svgicons: fa-link, fa-plus-circle" in front matter):
+               <svg class="svgicon"><use href="#fa-link"/></svg>
+               <svg class="svgicon"><use href="#fa-plus-circle"/></svg>
+            */
+            #svgicon-defs{
+                display: none;
+            }
+            .svgicon {
+                overflow: visible !important;
+                height: 0.7em;
+                width: 0.7em;
+                fill:currentColor;
+            }
+            /* Base template styles */
+            .navbar-brand img {
+                width: 32px;
+                height: 32px;
+            }
+            .text-120 {
+                font-size: 125%;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- SVG Icons -->
+        <svg id="svgicon-defs" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                {% include fontawesome/fa-plus-circle.svg %}
+                {% include fontawesome/fa-external-link.svg %}
+                {% assign additional_svgicons = page.svgicons | split: ',' %}
+                {% for svgicon_name in additional_svgicons %}
+                    {% assign svgicon_file = svgicon_name | strip | prepend: "fontawesome/" | append: ".svg" %}
+                    {% include {{ svgicon_file }} %}
+                {% endfor %}
+            </defs>
+        </svg>
+
+        <!-- Header -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{{ '/' | relative_url }}">
+                <img src="{{ '/assets/logo.png' | relative_url }}" class="d-inline-block align-top" alt="FreeFaceMaskCreator.com logo">
+                <span>Free Face Mask Creator!</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-collapse" aria-controls="nav-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary text-white mr-2" href="{{ '/create' | relative_url }}">
+                            <svg class="svgicon text-120"><use href="#fa-plus-circle"/></svg>
+                            Create a mask
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item{% if page.nav == 'examples' %} active{% endif %}">
+                        <a class="nav-link" href="{{ '/examples' | relative_url }}">
+                            Examples
+                        </a>
+                    </li>
+                    <li class="nav-item{% if page.nav == 'kids' %} active{% endif %}">
+                        <a class="nav-link" href="{{ '/for-kids' | relative_url }}">
+                            For Kids
+                        </a>
+                    </li>
+                    <li class="nav-item{% if page.nav == 'work' %} active{% endif %}">
+                        <a class="nav-link" href="{{ '/for-work' | relative_url }}">
+                            For Work
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item{% if page.nav == 'about' %} active{% endif %}">
+                        <a class="nav-link" href="{{ '/about' | relative_url }}">
+                            About Us
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div role="main">
+            {{ content }}
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-muted bg-light pt-4 pb-4">
+            <div class="container">
+                <p class="float-right">
+                    <a href="#">Back to top</a>
+                </p>
+                <p>
+                    Free Face Mask Creator is an open-source project run by volunteers from
+                    <a href="https://www.open-austin.org/" target="_blank" rel="noopener noreferrer"
+                        >Open Austin
+                        <svg class="svgicon small"><use href="#fa-external-link"/></svg></a>
+                </p>
+                <div class="row">
+                    <div class="col-sm-auto pr-sm-5">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="{{ '/' | relative_url }}">Home</a>
+                            </li>
+                            <li>
+                                <a href="{{ '/create' | relative_url }}">Create a mask</a>
+                            </li>
+                            <li>
+                                <a href="{{ '/examples' | relative_url }}">Examples</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-auto pr-sm-5">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="{{ '/for-kids' | relative_url }}">For Kids</a>
+                            </li>
+                            <li>
+                                <a href="{{ '/for-work' | relative_url }}">For Work</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-auto pr-sm-5">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="{{ '/about' | relative_url }}">About Us</a>
+                            </li>
+                            <li>
+                                <a href="{{ '/terms' | relative_url }}">Terms of Service</a>
+                            </li>
+                            <li>
+                                <a href="{{ '/privacy' | relative_url }}">Privacy Policy</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-auto pr-sm-5">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="{{ '/embed-docs' | relative_url }}">Embed in your website</a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/open-austin/freefacemaskcreator" target="_blank" rel="noopener noreferrer"
+                                    >Github Repository
+                                    <svg class="svgicon small"><use href="#fa-external-link"/></svg></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Scripts -->
+        <script src="{{ '/js/thirdparty/bootstrap-native-3.0.0.min.js' | relative_url }}"></script>
+        {% assign additional_js_list = page.additional_js | split: ',' %}
+        {% for additional_js in additional_js_list %}
+            <script src="{{ additional_js | strip | relative_url }}"></script>
+        {% endfor %}
+    </body>
+</html>
+

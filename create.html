@@ -1,0 +1,455 @@
+---
+layout: base
+title: Create a Mask - Free Face Mask Creator
+svgicons: fa-download, fa-share-alt, fa-facebook, fa-twitter, fa-instagram, fa-envelope-o, fa-files-o, fa-picture-o
+additional_js: /js/thirdparty/three-r115.min.js, /js/thirdparty/jspdf-1.5.3.min.js, /js/thirdparty/base64-binary.js, /js/image-overlay.js, /js/masks/flat-front.js, /js/masks/curved.js, /js/masks/pleated.js, /js/create.js
+---
+
+<!-- Styles -->
+<style>
+    .preview-header {
+        padding: .25rem .75rem;
+        font-size: 90%;
+    }
+    .card-no-margin {
+        padding: 0;
+        border-radius: 0 0 .24rem .25rem;
+        line-height: 0;
+    }
+
+    /* image selection */
+    .add-image-wrapper {
+        position: absolute;
+        margin: 0;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 400px;
+        background-color: rgba(0,0,0,0.1);
+    }
+    .change-image-wrapper {
+        position: absolute;
+        display: inline-block;
+        margin: 0;
+        top: 0;
+        right: 0;
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+    #add-image {
+        box-shadow: 4px 5px 5px #555;
+    }
+    @media (max-width: 432px) {
+        .add-image-wrapper { height: 300px; }
+    }
+
+    /* pdf preview */
+    #preview-mirrored {
+        font-size: 80%;
+    }
+    #preview-rightway {
+        font-size: 80%;
+    }
+
+    /* positioning/scaling/resize tool */
+    #drag-overlay {
+        position: absolute;
+    }
+    #move-area {
+        top: 0px;
+        left: 0px;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 1px solid #000;
+        background-color: none;
+        cursor: grab;
+    }
+    #rotate-bar {
+        top: -15px;
+        left: calc(50% + 4px);
+        position: absolute;
+        width: 1px;
+        height: 15px;
+        border: 1px solid #000;
+        background-color: none;
+        cursor: default;
+    }
+    #rotate-circle {
+        top: -20px;
+        left: 50%;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border: 1px solid #000;
+        border-radius: 5px;
+        background-color: #ff0;
+        cursor: grab;
+    }
+    #edge-top {
+        top: -5px;
+        left: 0px;
+        position: absolute;
+        width: 100%;
+        height: 10px;
+        border: none;
+        background-color: none;
+        cursor: ns-resize;
+    }
+    #edge-bottom {
+        bottom: -5px;
+        left: 0px;
+        position: absolute;
+        width: 100%;
+        height: 10px;
+        border: none;
+        background-color: none;
+        cursor: ns-resize;
+    }
+    #edge-left {
+        top: 0px;
+        left: -5px;
+        position: absolute;
+        width: 10px;
+        height: 100%;
+        border: none;
+        background-color: none;
+        cursor: ew-resize;
+    }
+    #edge-right {
+        top: 0px;
+        right: -5px;
+        position: absolute;
+        width: 10px;
+        height: 100%;
+        border: none;
+        background-color: none;
+        cursor: ew-resize;
+    }
+    #corner-top-left {
+        top: -5px;
+        left: -5px;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border: 1px solid #000;
+        border-radius: 5px;
+        background-color: #ff0;
+        cursor: nwse-resize;
+    }
+    #corner-top-right {
+        top: -5px;
+        right: -5px;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border: 1px solid #000;
+        border-radius: 5px;
+        background-color: #ff0;
+        cursor: nesw-resize;
+    }
+    #corner-bottom-left {
+        bottom: -5px;
+        left: -5px;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border: 1px solid #000;
+        border-radius: 5px;
+        background-color: #ff0;
+        cursor: nesw-resize;
+    }
+    #corner-bottom-right {
+        bottom: -5px;
+        right: -5px;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border: 1px solid #000;
+        border-radius: 5px;
+        background-color: #ff0;
+        cursor: nwse-resize;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+
+    <!-- Title -->
+    <h1>
+        Create your <span class="d-none d-sm-none d-md-inline">own face</span> mask design
+    </h1>
+    <p class="lead">
+        Simply pick your mask type, add a picture, and print out the pattern
+    </p>
+
+    <!-- Widget -->
+    <div class="row">
+        <div class="col-md-8 px-md-1 col-lg-7 px-lg-3 col-xl-7">
+            <div class="card mb-3">
+                <h5 class="card-header clearfix">
+                    <strong class="mr-1">
+                        Mask Type:
+                    </strong>
+                    <span class="d-inline-block">
+                        <button id="mask-curved" class="btn btn-outline-secondary mr-1 mask-type" data-toggle="tooltip" data-placement="top" title="Curved">
+                            Curved
+                        </button>
+                        <button id="mask-flatfront" class="btn btn-primary mr-1 mask-type" data-toggle="tooltip" data-placement="top" title="Flat-Front">
+                            Flat-Front
+                        </button>
+                        <button id="mask-pleated" class="btn btn-outline-secondary mr-1 mask-type" data-toggle="tooltip" data-placement="top" title="Pleated">
+                            Pleated
+                        </button>
+                    </span>
+                    <div class="btn-group float-right mt-1">
+                        <button id="size-selected" class="btn btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Size: Large
+                        </button>
+                        <div class="dropdown-menu">
+                            <a id="size-sm" class="dropdown-item mask-size" href="#">Small</a>
+                            <a id="size-md" class="dropdown-item mask-size" href="#">Medium</a>
+                            <a id="size-lg" class="dropdown-item mask-size active" href="#">Large</a>
+                        </div>
+                    </div>
+                </h5>
+                <div class="card-body card-no-margin overflow-hidden position-relative">
+                    <canvas id="canvas-design">
+                        You must have canvas enabled to use this tool.
+                    </canvas>
+                    <input id="img-input" type="file" class="d-none">
+                    <div class="text-right change-image-wrapper d-none">
+                        <button id="change-image" class="btn btn-link btn-sm">
+                            change image
+                        </button>
+                    </div>
+                    <div class="row align-items-center add-image-wrapper">
+                        <div class="col text-center">
+                            <button id="add-image" class="btn btn-primary btn-lg">
+                                <svg class="svgicon text-120 mb-1"><use href="#fa-picture-o"/></svg>
+                                Add an Image
+                            </button>
+                        </div>
+                    </div>
+                    <div id="drag-overlay" class="d-none">
+                        <div id="move-area"></div>
+                        <div id="rotate-bar"></div>
+                        <div id="rotate-circle"></div>
+                        <div id="edge-top"></div>
+                        <div id="edge-bottom"></div>
+                        <div id="edge-left"></div>
+                        <div id="edge-right"></div>
+                        <div id="corner-top-left"></div>
+                        <div id="corner-top-right"></div>
+                        <div id="corner-bottom-left"></div>
+                        <div id="corner-bottom-right"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button id="download-pdf" class="btn btn-primary btn-lg mb-1">
+                    <svg class="svgicon text-120"><use href="#fa-download"/></svg>
+                    Download PDF
+                </button>
+                <div class="text-center">
+                    <div class="btn-group">
+                        <button id="paper-selected" class="btn btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Paper: US Letter (iron-on)
+                        </button>
+                        <div class="dropdown-menu paper-dropdown">
+                            <a id="paper-ltr-iron" class="dropdown-item paper-type active" href="#">US Letter (8.5×11") for iron-on transfer</a>
+                            <a id="paper-ltr-trace" class="dropdown-item paper-type" href="#">US Letter (8.5×11") for hand tracing</a>
+                            <a id="paper-a4-iron" class="dropdown-item paper-type" href="#">A4 (210×297mm) for iron-on transfer</a>
+                            <a id="paper-a4-trace" class="dropdown-item paper-type" href="#">A4 (210×297mm) for hand tracing</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-link mt-1" data-toggle="modal" data-target="#exampleModal">
+                        <svg class="svgicon text-120"><use href="#fa-facebook"/></svg
+                        ><svg class="svgicon text-120"><use href="#fa-twitter"/></svg
+                        ><svg class="svgicon text-120"><use href="#fa-instagram"/></svg
+                        ><svg class="svgicon text-120"><use href="#fa-share-alt"/></svg
+                        ><span class="d-inline-block ml-1">Share your mask</span>
+                    </button>
+                </div>
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                    Share your face mask design!
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body text-left">
+                                <div class="form-group">
+                                    <label for="share-link">
+                                        Here is your face mask design link:
+                                    </label>
+                                    <input
+                                        id="share-link"
+                                        class="form-control"
+                                        placeholder="Generating link..."
+                                        value="https://freefacemaskcreator.com/create#sdlfkj049j093ifsjd9034jj-3sflkjd039fjsoiadfj0934jfsdjf049jfadf"
+                                        readonly>
+                                    <div class="help-block text-right small">
+                                        <a id="copy-link" href="#" class="text-muted mr-1">
+                                            <span id="copy-link-default" class="">Copy link</span>
+                                            <span id="copy-link-copied" class="d-none">Copied!</span>
+                                            <svg class="svgicon"><use href="#fa-files-o"/></svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-md-center">
+                                    <div class="col-sm-auto">
+                                        <div>
+                                            <a href="#TODO" class="btn btn-link">
+                                                <svg class="svgicon text-120 mr-1"><use href="#fa-facebook"/></svg
+                                                >Share to Facebook
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a href="#TODO" class="btn btn-link">
+                                                <svg class="svgicon text-120 mr-1"><use href="#fa-twitter"/></svg
+                                                >Share to Twitter
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a href="#TODO" class="btn btn-link">
+                                                <svg class="svgicon text-120 mr-1"><use href="#fa-instagram"/></svg
+                                                >Share to Instagram
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a href="#TODO" class="btn btn-link">
+                                                <svg class="svgicon text-120 mr-1"><use href="#fa-envelope-o"/></svg
+                                                >Email to a friend
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button id="undo-button" class="btn btn-link btn-sm">undo</button>
+                    <button id="redo-button" class="btn btn-link btn-sm">redo</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 px-md-1 px-lg-3 col-lg-4">
+            <div class="card mb-2">
+                <div class="card-header preview-header">
+                    <strong>3D Preview</strong>
+                </div>
+                <div class="card-body card-no-margin overflow-hidden">
+                    <canvas id="canvas-3d">
+                        You must have canvas enabled to use this tool.
+                    </canvas>
+                </div>
+            </div>
+            <div class="card mb-2">
+                <div class="card-header preview-header">
+                    <strong>Print Preview</strong>
+                    <span id="preview-mirrored" class="d-none">
+                        (mirrored for iron-on)
+                        <a href="#">flip back?</a>
+                    </span>
+                    <span id="preview-rightway" class="d-none">
+                        <a href="#">mirror for iron-on?</a>
+                    </span>
+                </div>
+                <div class="card-body card-no-margin overflow-hidden">
+                    <canvas id="canvas-preview">
+                        You must have canvas enabled to use this tool.
+                    </canvas>
+                </div>
+            </div>
+            <div id="canvas-pdf-card" class="card mb-2 d-none"><!-- hidden by default -->
+                <div class="card-header preview-header">
+                    <strong>PDF</strong>
+                </div>
+                <div class="card-body card-no-margin overflow-hidden">
+                    <canvas id="canvas-pdf" class="d-none"></canvas><!-- hidden canvas for rendering pdf image -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    /* Global variables */
+
+    // design tool canvas
+    const canvasDesign = document.getElementById('canvas-design');
+    const ctxDesign = canvasDesign.getContext('2d');
+    // 3d preview canvas
+    const canvas3d = document.getElementById('canvas-3d');
+    const ctx3d = canvas3d.getContext('2d');
+    // print preview canvas
+    const canvasPreview = document.getElementById('canvas-preview');
+    const ctxPreview = canvasPreview.getContext('2d');
+    // pdf export render canvas
+    const canvasPdf = document.getElementById('canvas-pdf');
+    const ctxPdf = canvasPdf.getContext('2d');
+    // image overlay for positioning and resizing
+    const dragOverlay = document.getElementById('drag-overlay');
+
+    // current design values
+    // (source of truth used/modified by various functions)
+    // (and is what's saved/loaded for share links)
+    let DESIGN = {
+        // mask template/print settings
+        "maskType": undefined,      // mask template to use ("curved|flatfront|pleated")
+        "maskSize": undefined,      // mask size to use ("small|medium|large")
+        "paperType": undefined,     // paper type to use ("us-letter|a4")
+        "isReverse": undefined,     // whether the image should be reversed on the printout (true|false)
+        // image data and positioning (we don't use raw x-y coordinates to make saved designs more resilient to future template tweaks)
+        "imgData": undefined,       // image object itself
+        "imgType": undefined,       // image mime type (e.g. "image/png")
+        "imgCenter": undefined,     // what percentage of the design template's height and width the image is centered on (e.g. [0.5, 0.5])
+        "imgScaleX": undefined,     // image horizontal scale compared to design template size (e.g. 0.25)
+        "imgScaleY": undefined,     // image vertical scale compared to design template size (e.g. 0.25)
+        "imgRotation": undefined,   // image rotation (e.g. 180.0)
+    };
+
+    // temporary calculations/cache for the current rendering
+    // (so that things like dragging listeners know where the image is on the canvas)
+    let TMP = {
+        "designWidth": undefined,   // canvas width for design tool
+        "designHeight": undefined,  // canvas height for design tool
+        "designScale": undefined,   // scale of design template size to design tool canvas
+        "offsetX": undefined,       // x-offset of design template within the canvas
+        "offsetY": undefined,       // y-offset of design template within the canvas
+        "imgX": undefined,          // image x-offset within design canvas (used for drag/resize overlay)
+        "imgY": undefined,          // image y-offset within design canvas (used for drag/resize overlay)
+        "imgW": undefined,          // image width within design canvas (used for drag/resize overlay)
+        "imgH": undefined,          // image heigh within design canvas (used for drag/resize overlay)
+        "pdf": undefined,           // rendered pdf of current template+image
+        "dragType": undefined,      // type of transformation ("move|rotate|scale-top-left|...")
+        "dragStartX": undefined,    // where mouse drag started (x-coord)
+        "dragStartY": undefined,    // where mouse drag started (y-coord)
+        "undo": [],                 // undo history, TODO
+        "redo": [],                 // redo history, TODO
+    };
+
+    // Run initialization
+    window.onload = function() {
+        // wait for draw() to be loaded
+        if (window.draw === undefined) {
+            setTimeout(init, 50);
+            return;
+        }
+        // load the saved design (if any) and then draw the first render
+        loadImageFromUrl(function() {
+            draw();
+        });
+    };
+</script>
+
