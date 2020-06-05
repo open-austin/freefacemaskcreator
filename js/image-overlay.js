@@ -5,6 +5,12 @@ document.getElementById("move-area").addEventListener("mousedown", function(e) {
     TMP['dragStartX'] = e.pageX;
     TMP['dragStartY'] = e.pageY;
 });
+document.getElementById("move-area").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    TMP['dragType'] = "move";
+    TMP['dragStartX'] = e.touches[0].pageX;
+    TMP['dragStartY'] = e.touches[0].pageY;
+});
 // move calculations
 function moveImg(mouseX, mouseY) {
     // move the overlay around with the mouse
@@ -25,6 +31,12 @@ document.getElementById("rotate-circle").addEventListener("mousedown", function(
     TMP['dragType'] = "rotate";
     TMP['dragStartX'] = e.pageX;
     TMP['dragStartY'] = e.pageY;
+});
+document.getElementById("rotate-circle").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    TMP['dragType'] = "rotate";
+    TMP['dragStartX'] = e.touches[0].pageX;
+    TMP['dragStartY'] = e.touches[0].pageY;
 });
 function rotateImg(mouseX, mouseY) {
     // rotate the overlay around with the mouse
@@ -56,20 +68,44 @@ document.getElementById("corner-top-left").addEventListener("mousedown", functio
     TMP['dragStartX'] = e.pageX;
     TMP['dragStartY'] = e.pageY;
 });
+document.getElementById("corner-top-left").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    TMP['dragType'] = "scale-top-left";
+    TMP['dragStartX'] = e.touches[0].pageX;
+    TMP['dragStartY'] = e.touches[0].pageY;
+});
 document.getElementById("corner-top-right").addEventListener("mousedown", function(e) {
     TMP['dragType'] = "scale-top-right";
     TMP['dragStartX'] = e.pageX;
     TMP['dragStartY'] = e.pageY;
+});
+document.getElementById("corner-top-right").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    TMP['dragType'] = "scale-top-right";
+    TMP['dragStartX'] = e.touches[0].pageX;
+    TMP['dragStartY'] = e.touches[0].pageY;
 });
 document.getElementById("corner-bottom-left").addEventListener("mousedown", function(e) {
     TMP['dragType'] = "scale-bottom-left";
     TMP['dragStartX'] = e.pageX;
     TMP['dragStartY'] = e.pageY;
 });
+document.getElementById("corner-bottom-left").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    TMP['dragType'] = "scale-bottom-left";
+    TMP['dragStartX'] = e.touches[0].pageX;
+    TMP['dragStartY'] = e.touches[0].pageY;
+});
 document.getElementById("corner-bottom-right").addEventListener("mousedown", function(e) {
     TMP['dragType'] = "scale-bottom-right";
     TMP['dragStartX'] = e.pageX;
     TMP['dragStartY'] = e.pageY;
+});
+document.getElementById("corner-bottom-right").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    TMP['dragType'] = "scale-bottom-right";
+    TMP['dragStartX'] = e.touches[0].pageX;
+    TMP['dragStartY'] = e.touches[0].pageY;
 });
 function scaleCorner(mouseX, mouseY, corner) {
     // un-rotate the corner for easier scaling calc
@@ -132,20 +168,44 @@ document.getElementById("edge-top").addEventListener("mousedown", function(e) {
     TMP['dragStartX'] = e.pageX;
     TMP['dragStartY'] = e.pageY;
 });
+document.getElementById("edge-top").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    TMP['dragType'] = "edge-top";
+    TMP['dragStartX'] = e.touches[0].pageX;
+    TMP['dragStartY'] = e.touches[0].pageY;
+});
 document.getElementById("edge-bottom").addEventListener("mousedown", function(e) {
     TMP['dragType'] = "scale-bottom";
     TMP['dragStartX'] = e.pageX;
     TMP['dragStartY'] = e.pageY;
+});
+document.getElementById("edge-bottom").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    TMP['dragType'] = "edge-bottom";
+    TMP['dragStartX'] = e.touches[0].pageX;
+    TMP['dragStartY'] = e.touches[0].pageY;
 });
 document.getElementById("edge-left").addEventListener("mousedown", function(e) {
     TMP['dragType'] = "scale-left";
     TMP['dragStartX'] = e.pageX;
     TMP['dragStartY'] = e.pageY;
 });
+document.getElementById("edge-left").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    TMP['dragType'] = "edge-left";
+    TMP['dragStartX'] = e.touches[0].pageX;
+    TMP['dragStartY'] = e.touches[0].pageY;
+});
 document.getElementById("edge-right").addEventListener("mousedown", function(e) {
     TMP['dragType'] = "scale-right";
     TMP['dragStartX'] = e.pageX;
     TMP['dragStartY'] = e.pageY;
+});
+document.getElementById("edge-right").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    TMP['dragType'] = "edge-right";
+    TMP['dragStartX'] = e.touches[0].pageX;
+    TMP['dragStartY'] = e.touches[0].pageY;
 });
 function scaleEdge(mouseX, mouseY, edge) {
     // un-rotate the edge for easier scaling calc
@@ -231,23 +291,38 @@ function scaleEdge(mouseX, mouseY, edge) {
 }
 
 // drag start
-document.getElementsByTagName("body")[0].addEventListener("mousemove", function(e) {
-    switch (TMP['dragType']) {
-        case "move":                moveImg(e.pageX, e.pageY);                      break;
-        case "rotate":              rotateImg(e.pageX, e.pageY);                    break;
-        case "scale-top":           scaleEdge(e.pageX, e.pageY, "top");             break;
-        case "scale-bottom":        scaleEdge(e.pageX, e.pageY, "bottom");          break;
-        case "scale-left":          scaleEdge(e.pageX, e.pageY, "left");            break;
-        case "scale-right":         scaleEdge(e.pageX, e.pageY, "right");           break;
-        case "scale-top-left":      scaleCorner(e.pageX, e.pageY, "top-left");      break;
-        case "scale-top-right":     scaleCorner(e.pageX, e.pageY, "top-right");     break;
-        case "scale-bottom-left":   scaleCorner(e.pageX, e.pageY, "bottom-left");   break;
-        case "scale-bottom-right":  scaleCorner(e.pageX, e.pageY, "bottom-right");  break;
-        case undefined:             break; // do nothing if not currently dragging
+function dragStart(e) {
+    if (TMP['dragType'] !== undefined) {
+        let pageX = undefined;
+        let pageY = undefined;
+        // prevent scrolling on mobile and set x-y coords
+        if (e.type === "touchmove") {
+            e.preventDefault();
+            pageX = e.touches[0].pageX;
+            pageY = e.touches[0].pageY;
+        } else {
+            pageX = e.pageX;
+            pageY = e.pageY;
+        }
+        // send to appropriate transform function
+        switch (TMP['dragType']) {
+            case "move":                moveImg(pageX, pageY);                        break;
+            case "rotate":              rotateImg(pageX, pageY);                      break;
+            case "scale-top":           scaleEdge(pageX, pageY, "top");               break;
+            case "scale-bottom":        scaleEdge(pageX, pageY, "bottom");            break;
+            case "scale-left":          scaleEdge(pageX, pageY, "left");              break;
+            case "scale-right":         scaleEdge(pageX, pageY, "right");             break;
+            case "scale-top-left":      scaleCorner(pageX, pageY, "top-left");        break;
+            case "scale-top-right":     scaleCorner(pageX, pageY, "top-right");       break;
+            case "scale-bottom-left":   scaleCorner(pageX, pageY, "bottom-left");     break;
+            case "scale-bottom-right":  scaleCorner(pageX, pageY, "bottom-right");    break;
+        }
     }
-});
+}
+document.getElementsByTagName("body")[0].addEventListener("mousemove", dragStart);
+document.getElementsByTagName("body")[0].addEventListener("touchmove", dragStart);
 // drag end
-document.getElementsByTagName("body")[0].addEventListener("mouseup", function(e) {
+function dragEnd(e) {
     if (TMP['dragType'] !== undefined) {
 
         // save movement to UNDO queue
@@ -261,5 +336,8 @@ document.getElementsByTagName("body")[0].addEventListener("mouseup", function(e)
         TMP['dragStartX'] = undefined;
         TMP['dragStartY'] = undefined;
     }
-});
+}
+document.getElementsByTagName("body")[0].addEventListener("mouseup", dragEnd);
+document.getElementsByTagName("body")[0].addEventListener("touchend", dragEnd);
+document.getElementsByTagName("body")[0].addEventListener("touchcancel", dragEnd);
 
