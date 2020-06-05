@@ -50,11 +50,13 @@ function draw() {
     ctxDesign.setTransform(1, 0, 0, 1, 0, 0);
     ctx3d.setTransform(1, 0, 0, 1, 0, 0);
     ctxPreview.setTransform(1, 0, 0, 1, 0, 0);
+    ctxPdf.setTransform(1, 0, 0, 1, 0, 0);
 
     // clear the designs
     ctxDesign.clearRect(0, 0, canvasDesign.width, canvasDesign.height);
     ctx3d.clearRect(0, 0, canvas3d.width, canvas3d.height);
     ctxPreview.clearRect(0, 0, canvasPreview.width, canvasPreview.height);
+    ctxPdf.clearRect(0, 0, canvasPdf.width, canvasPdf.height);
 
     // clear the overlay
     dragOverlay.classList.add("d-none");
@@ -211,14 +213,17 @@ function switchMaskType(e) {
         case "mask-curved":
             maskCurved.classList.add("btn-primary");
             maskCurved.classList.remove("btn-outline-secondary");
+            document.getElementById("pattern-coming-soon").classList.remove("d-none"); // TODO: remove when all patterns work
             break;
         case "mask-flatfront":
             maskFlatFront.classList.add("btn-primary");
             maskFlatFront.classList.remove("btn-outline-secondary");
+            document.getElementById("pattern-coming-soon").classList.add("d-none"); // TODO: remove when all patterns work
             break;
         case "mask-pleated":
             maskPleated.classList.add("btn-primary");
             maskPleated.classList.remove("btn-outline-secondary");
+            document.getElementById("pattern-coming-soon").classList.remove("d-none"); // TODO: remove when all patterns work
             break;
     }
 

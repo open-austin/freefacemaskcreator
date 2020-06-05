@@ -242,6 +242,10 @@ additional_js: /js/thirdparty/three-r115.min.js, /js/thirdparty/jspdf-1.5.3.min.
                         <div id="corner-bottom-left"></div>
                         <div id="corner-bottom-right"></div>
                     </div>
+
+                    <!--TODO: remove when all patterns are functional-->
+                    <span id="pattern-coming-soon" class="d-none" style="position:absolute;top:0px;left:0px;width:100%;height:100%;background-color:white;text-align:center;padding-top:20px;">Coming soon!</span>
+
                 </div>
             </div>
             <div class="text-center">
@@ -283,6 +287,12 @@ additional_js: /js/thirdparty/three-r115.min.js, /js/thirdparty/jspdf-1.5.3.min.
                                 </button>
                             </div>
                             <div class="modal-body text-left">
+
+                                <!--TODO: remove when sharing is functional-->
+                                <div class="alert alert-danger text-center">
+                                    <strong>WARNING: Sharing doesn't work yet</strong>
+                                </div>
+
                                 <div class="form-group">
                                     <label for="share-link">
                                         Here is your face mask design link:
@@ -291,7 +301,7 @@ additional_js: /js/thirdparty/three-r115.min.js, /js/thirdparty/jspdf-1.5.3.min.
                                         id="share-link"
                                         class="form-control"
                                         placeholder="Generating link..."
-                                        value="https://freefacemaskcreator.com/create#sdlfkj049j093ifsjd9034jj-3sflkjd039fjsoiadfj0934jfsdjf049jfadf"
+                                        value="https://freefacemaskcreator.com/create#aaaaaaaaaaaaaaaaaaaaaaa-bbbbbbbbbbbbbbbbbbbbbbb"
                                         readonly>
                                     <div class="help-block text-right small">
                                         <a id="copy-link" href="#" class="text-muted mr-1">
@@ -347,7 +357,11 @@ additional_js: /js/thirdparty/three-r115.min.js, /js/thirdparty/jspdf-1.5.3.min.
                 <div class="card-header preview-header">
                     <strong>3D Preview</strong>
                 </div>
-                <div class="card-body card-no-margin overflow-hidden">
+                <div class="card-body card-no-margin overflow-hidden position-relative">
+
+                    <!--TODO: remove when 3d preview is functional-->
+                    <span style="position:absolute;top:20px;left:10px;">Coming soon!</span>
+
                     <canvas id="canvas-3d">
                         You must have canvas enabled to use this tool.
                     </canvas>
