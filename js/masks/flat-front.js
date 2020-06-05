@@ -196,8 +196,13 @@ function drawFlatFront() {
         ctxPreview.closePath();
         ctxPreview.clip();
 
-        // draw image that gets clipped
+        // draw the rotated image (will get clipped)
+        ctxPreview.save();
+        ctxPreview.translate((DESIGN['imgCenter'][0] * TMP['designWidth']), (DESIGN['imgCenter'][1] * TMP['designHeight']));
+        ctxPreview.rotate(DESIGN['imgRotation'] * Math.PI / 180);
+        ctxPreview.translate(-1 * (DESIGN['imgCenter'][0] * TMP['designWidth']), -1 * (DESIGN['imgCenter'][1] * TMP['designHeight']));
         ctxPreview.drawImage(DESIGN['imgData'], TMP['imgX'], TMP['imgY'], TMP['imgW'], TMP['imgH']);
+        ctxPreview.restore();
 
         // revert clipping
         ctxPreview.restore();
@@ -261,8 +266,13 @@ function drawFlatFront() {
         ctxPdf.closePath();
         ctxPdf.clip();
 
-        // draw image that gets clipped
+        // draw the rotated image (will get clipped)
+        ctxPdf.save();
+        ctxPdf.translate((DESIGN['imgCenter'][0] * TMP['designWidth']), (DESIGN['imgCenter'][1] * TMP['designHeight']));
+        ctxPdf.rotate(DESIGN['imgRotation'] * Math.PI / 180);
+        ctxPdf.translate(-1 * (DESIGN['imgCenter'][0] * TMP['designWidth']), -1 * (DESIGN['imgCenter'][1] * TMP['designHeight']));
         ctxPdf.drawImage(DESIGN['imgData'], TMP['imgX'], TMP['imgY'], TMP['imgW'], TMP['imgH']);
+        ctxPdf.restore();
 
         // revert clipping
         ctxPdf.restore();
