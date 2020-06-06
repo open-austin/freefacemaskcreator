@@ -223,7 +223,7 @@ function switchMaskType(e) {
         case "mask-pleated":
             maskPleated.classList.add("btn-primary");
             maskPleated.classList.remove("btn-outline-secondary");
-            document.getElementById("pattern-coming-soon").classList.remove("d-none"); // TODO: remove when all patterns work
+            document.getElementById("pattern-coming-soon").classList.add("d-none"); // TODO: remove when all patterns work
             break;
     }
 
