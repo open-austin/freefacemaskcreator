@@ -2,7 +2,7 @@
 
 **WARNING: THIS PROJECT IS NOT YET COMPLETE. SOME THINGS DO NOT WORK YET.**
 
-Website: https://freefacemaskcreator.com
+Website: https://www.open-austin.org/freefacemaskcreator/
 
 This is a free and open-source embeddable website that lets users
 add an image to a face mask and print out the pattern so they can
@@ -20,7 +20,7 @@ facemask.
 
 ## TODOs
 
-* [x] Domain acquired (**DONE**, [freefacemaskcreator.com](https://freefacemaskcreator.com))
+* [x] Domain acquired (**DONE**, [https://www.open-austin.org/freefacemaskcreator/](https://www.open-austin.org/freefacemaskcreator/))
 * [x] Basic functionality for making a mask pattern (**DONE**, flat-front only)
 * [ ] Other mask patterns (e.g. curved, pleated, etc.)
 * [ ] Static webpage content (e.g. landing, about, etc.)
